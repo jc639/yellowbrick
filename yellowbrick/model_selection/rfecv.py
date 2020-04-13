@@ -203,7 +203,7 @@ class RFECV(ModelVisualizer):
         # HACK: this is wrong and needs to be fixed
         n_features = X.shape[1]
         step = int(self.step)
-        self.n_feature_subsets_ = np.arange(1, np.ceil((n_features - self.min_features_to_select) / step) + 1)
+        self.n_feature_subsets_ = np.arange(1, np.ceil((n_features - self.min_features_to_select) / step) + 2)
 
         # Modify the internal estimator to be the final fitted estimator
         self._wrapped = self.rfe_estimator_.estimator_
@@ -221,8 +221,8 @@ class RFECV(ModelVisualizer):
         """
         # Compute the curves
         x = self.n_feature_subsets_
-        means = self.cv_scores_.mean(axis=1)
-        sigmas = self.cv_scores_.std(axis=1)
+        means = self.cv_scores_.mean(axis=0)[::-1]
+        sigmas = self.cv_scores_.std(axis=0)[::-1]
 
         # Plot one standard deviation above and below the mean
         self.ax.fill_between(x, means - sigmas, means + sigmas, alpha=0.25)
